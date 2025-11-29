@@ -3,7 +3,6 @@ package com.documentAccessControl.controller;
 import com.documentAccessControl.dto.*;
 import com.documentAccessControl.service.DocumentService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,16 +16,12 @@ public class DocumentController {
 
     private final DocumentService documentService;
 
-
     public DocumentController(DocumentService documentService) {
         this.documentService = documentService;
     }
 
     @PostMapping
-    public ResponseEntity<DocumentDto> createDocument(
-            @RequestHeader(X_USER_HEADER) String username,
-            @Valid @RequestBody CreateDocumentRequest request){
-
+    public ResponseEntity<DocumentDto> createDocument(@RequestHeader(X_USER_HEADER) String username, @Valid @RequestBody CreateDocumentRequest request){
         validateUser(username);
         DocumentDto documentDto = documentService.createDocument(username, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(documentDto);

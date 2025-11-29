@@ -12,6 +12,14 @@ public class DocumentDto {
     public DocumentDto() {
     }
 
+    public DocumentDto(Long id, String name, String content, String fileType, List<UserPermissionDto> accessibleUsers) {
+        this.id = id;
+        this.name = name;
+        this.content = content;
+        this.fileType = fileType;
+        this.accessibleUsers = accessibleUsers;
+    }
+
     public DocumentDto(Long id) {
         this.id = id;
     }
