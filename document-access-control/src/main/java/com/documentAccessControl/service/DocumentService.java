@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class DocumentService {
     private static final String ADMIN_USER = "admin";
 
@@ -46,8 +45,6 @@ public class DocumentService {
     public List<DocumentDto> getListOfAccessibleDocuments(String username){
         List<Document> documents;
 
-        System.out.println("Username --> "+username);
-
         if(ADMIN_USER.equalsIgnoreCase(username)){
             documents = documentRepository.findAll();
         } else {
@@ -61,7 +58,6 @@ public class DocumentService {
 
     @Transactional(readOnly = true)
     public DocumentDto getDocumentById(String username, Long id){
-        System.out.println("username -> "+username + " **** with document id -> "+id);
         Document document = documentRepository.findById(id).orElseThrow(() -> new DocumentNotFoundException("Document not found with id: " + id));
 
         if(!hasPermission(username, document, Permission.READ)){
@@ -72,7 +68,6 @@ public class DocumentService {
     }
 
     public void deleteDocument(String username, Long id){
-        System.out.println("username -> "+username + " **** with document id -> "+id);
         Document document = documentRepository.findById(id).orElseThrow(() -> new DocumentNotFoundException("Document not found with id: " + id));
 
         if(!hasPermission(username, document, Permission.DELETE)){
@@ -137,16 +132,11 @@ public class DocumentService {
         if(ADMIN_USER.equalsIgnoreCase(username)){
             return true;
         }
-
         if(document.getCreatedBy().equals(username)){
             return true;
         }
-
         return document.getPermissions().stream()
                 .anyMatch(p -> p.getUsername().equals(username) && p.getPermission().equals(Permission.WRITE));
-
-
-
     }
 
     private DocumentDto documentBeanToDto(Document document){
@@ -162,6 +152,5 @@ public class DocumentService {
         documentDto.setAccessibleUsers(userPermissionDtoList);
 
         return documentDto;
-
     }
 }
